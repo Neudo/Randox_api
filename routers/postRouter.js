@@ -1,9 +1,14 @@
 const express = require('express')
-const {create,edit,showLatest, deletePost} = require ('../controllers/postController')
-exports.router = (()=>{
-    const authRouter = express.Router()
-    authRouter.route('/signup/').post(register)
-    return authRouter
-})()
+const {create,edit,showAll, showOne, deletePost} = require ('../controllers/postController')
+const {authMiddleware} = require ('../middlewares/authMiddleware')
 
+exports.router = (()=>{
+    const postRouter = express.Router()
+    postRouter.route('/create/').post( authMiddleware, create)
+    postRouter.route('/edit/:id').post( authMiddleware, edit)
+    postRouter.route('/delete/:id').delete( authMiddleware, deletePost)
+    postRouter.route('/').get( authMiddleware, showAll)
+    postRouter.route('/:id').get( authMiddleware, showOne)
+    return postRouter
+})()
 

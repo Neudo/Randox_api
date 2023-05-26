@@ -56,20 +56,6 @@ module.exports = {
     logout(req, res) {
         res.status(200).json({message: "Déconnexion réussie"});
     },
-    authMiddleware(req,res,next){
-        const token = req.headers.authorization.split(' ')[1]
-        if (!token) {
-            return res.status(401).json({ error: "Non autorisé - Aucun jeton d'authentification fourni" });
-        }
-        try {
-            const decoded = jwt.verify(token, JWT_ACCESS_SECRET);
-            req.user = decoded;
-            next();
-        } catch (error) {
-            console.error("Erreur lors de la vérification du jeton d'authentification:", error);
-            return res.status(401).json({ error: "Non autorisé - Jeton d'authentification invalide" });
-        }
-    },
     async me(req, res) {
 
         try {
@@ -85,4 +71,5 @@ module.exports = {
             res.status(500).json({ error: "Une erreur s'est produite lors de la récupération des informations de l'utilisateur" });
         }
     },
+
 };

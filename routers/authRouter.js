@@ -1,5 +1,6 @@
 const express = require('express')
-const {register, login, logout, authMiddleware, me} = require ('../controllers/authController')
+const {register, login, logout, me} = require ('../controllers/authController')
+const {authMiddleware} = require ('../middlewares/authMiddleware')
 exports.router = (()=>{
     const authRouter = express.Router()
     authRouter.route('/signup/').post(register)
