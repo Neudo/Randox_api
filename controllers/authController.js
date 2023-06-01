@@ -1,14 +1,14 @@
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const {CourierClient} = require("@trycourier/courier");
 const prisma = new PrismaClient();
 require('dotenv').config()
-const {JWT_ACCESS_SECRET} = process.env
-
-
+const {JWT_ACCESS_SECRET, API_KEY, SITE_URL} = process.env
+const courier = CourierClient({ authorizationToken: `${API_KEY}` });
 
 module.exports = {
-    async register(req, res) {
+    async register(req, res, next) {
         let newUser;
         try {
             const { email, name, password } = req.body;
@@ -28,11 +28,34 @@ module.exports = {
                 },
             });
 
+            const Username = newUser.name
+
             res.status(201).json({ message: "Utilisateur créé avec succès", user: newUser });
         } catch (error) {
             console.error("Erreur lors de la création de l'utilisateur:", error);
             res.status(500).json({ error: "Une erreur s'est produite lors de la création de l'utilisateur" });
         }
+        next()
+    },
+    async sendMailRegister(req, res) {
+        const { requestId } = await courier.send({
+            message: {
+                to: {
+                    data: {
+                        name: req.body.name,
+                    },
+                    email: req.body.email,
+                },
+                content: {
+                    title: "Inscription Randox",
+                    body: "Merci pour votre inscription {{name}}, cliquez sur ce lien : "+`${SITE_URL}`+"login  pour vous connecter à votre compte.",
+                },
+                routing: {
+                    method: "single",
+                    channels: ["email"],
+                },
+            },
+        });
     },
     async login(req, res) {
         try {
