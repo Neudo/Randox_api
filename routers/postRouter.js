@@ -7,8 +7,8 @@ exports.router = (()=>{
     postRouter.route('/create/').post( authMiddleware, create)
     postRouter.route('/edit/:id').post( authMiddleware, edit)
     postRouter.route('/delete/:id').delete( authMiddleware, deletePost)
-    postRouter.route('/').get( authMiddleware, showAll)
-    postRouter.route('/:id').get( authMiddleware, showOne)
+    postRouter.route('/').get(showAll)
+    postRouter.route('/:id').get(showOne)
     return postRouter
 })()
 

@@ -7,7 +7,7 @@ exports.router = (()=>{
     planRouter.route('/create').post( authMiddleware, create)
     planRouter.route('/edit/:id').post( authMiddleware, edit)
     planRouter.route('/delete/:id').delete( authMiddleware, deletePlan)
-    planRouter.route('/').get( authMiddleware, showAll)
+    planRouter.route('/').get(showAll)
     return planRouter
 })()
 
