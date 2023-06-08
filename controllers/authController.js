@@ -100,5 +100,8 @@ module.exports = {
             res.status(500).json({ error: "Une erreur s'est produite lors de la récupération des informations de l'utilisateur" });
         }
     },
+    async updateMe(req, res){
+
+    },
 
 };

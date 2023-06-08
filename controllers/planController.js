@@ -69,11 +69,10 @@ module.exports = {
         let allPlans
         try{
             allPlans =  await prisma.plan.findMany()
-            res.status(201).json({ message: "Voici la liste des plans : ", allPlans });
+            res.status(201).json(allPlans);
         } catch {
-            console.log("Erreur lors de la récupération des posts", error);
+            console.log("Erreur lors de la récupération des posts");
             res.status(500).json({ error: "Une erreur s'est produite lors de la récupération des posts" });
         }
     },
-
 };
