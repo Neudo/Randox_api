@@ -13,7 +13,14 @@ module.exports = {
         try {
             const { email, name, password } = req.body;
 
-            const existingUser = await prisma.user.findUnique({ where: { email } });
+            const existingUser = await prisma.user.findFirst({
+                where: {
+                    OR: [
+                        { email },
+                        { name }
+                    ]
+                }
+            });
             if (existingUser) {
                 return res.status(400).json({ error: "Cet utilisateur existe déjà" });
             }
@@ -25,17 +32,16 @@ module.exports = {
                     email,
                     name,
                     password : hashedPassword,
+                    stripe_customer_id : '',
+                    isAdmin : false
                 },
             });
-
-            const Username = newUser.name
-
             res.status(201).json({ message: "Utilisateur créé avec succès", user: newUser });
+            next()
         } catch (error) {
             console.error("Erreur lors de la création de l'utilisateur:", error);
             res.status(500).json({ error: "Une erreur s'est produite lors de la création de l'utilisateur" });
         }
-        next()
     },
     async sendMailRegister(req, res) {
         const { requestId } = await courier.send({

@@ -1,8 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
 }
 
 datasource db {
@@ -11,44 +9,44 @@ datasource db {
 }
 
 model User {
-  id              Int @id @default(autoincrement())
-  email           String         @unique
-  name            String         @unique
-  password        String
-  stripe_customer_id String      @unique
-  created_at      DateTime       @default(now())
-  updated_at      DateTime       @updatedAt
-
-  posts Post[]
+  id                 Int      @id @default(autoincrement())
+  email              String   @unique
+  name               String   @unique
+  password           String
+  stripe_customer_id String
+  isAdmin            Boolean  @default(false)
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+  posts              Post[]   @relation("PostToUser")
 
   @@map("users")
 }
 
 model Post {
-  id              Int            @id @default(autoincrement())
-  title           String
-  short_desc      String
-  content         String         @db.LongText
-  image           String
-  created_at      DateTime       @default(now())
-  updated_at      DateTime       @updatedAt
-
-  Users User[]
+  id         Int      @id @default(autoincrement())
+  title      String
+  slug       String   @unique
+  short_desc String
+  content    String   @db.LongText
+  image      String
+  author     String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  publied    Boolean  @default(true)
+  Users      User[]   @relation("PostToUser")
 
   @@map("posts")
-
 }
 
 model Plan {
-  id             Int @id @default(autoincrement())
-  title          String         @unique
-  info           String
-  price          Float
-  image          String
-  stripe_id      String         @unique
-  created_at     DateTime       @default(now())
-  updated_at     DateTime       @updatedAt
+  id         Int      @id @default(autoincrement())
+  title      String   @unique
+  info       String
+  price      Float
+  image      String
+  stripe_id  String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("plans")
-
 }

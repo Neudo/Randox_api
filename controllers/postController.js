@@ -4,19 +4,37 @@ require('dotenv').config()
 
 module.exports = {
     async create(req,res){
+        console.log("req.user", req.user.userId)
         let newPost
         try {
-            const { title, short_desc, content, image } = req.body
+            const { title, short_desc, content, image, slug } = req.body
 
             newPost = await prisma.post.create({
                 data: {
                     title,
                     short_desc,
+                    slug,
                     content,
-                    image
+                    image,
+                    author: req.user.name,
+                    publied: true
                 }
             })
-            res.status(201).json({ message: "Post créé avec succès", post: newPost });
+
+            const error = []
+            if ((title.length <= 0) || (short_desc.length <= 0) || (content.length <= 0) || (image.length <= 0)) {
+                error.push("Merci de remplir tous les champs !")
+            }
+            // const existingSlug = await prisma.post.findFirst({where: slug});
+            // if (existingSlug){
+            //     error.push("Slug déjà pris pour un autre article ! Merci d'en choisir un autre")
+            // }
+
+            if(error.length === 0 ){
+                res.status(201).json({ message: "Post créé avec succès", post: newPost });
+            } else {
+                res.status(400).json({message: error})
+            }
         } catch (error) {
             console.log("Erreur lors de la création du post", error)
             res.status(500).json({ error: "Une erreur s'est produite lors de la création du post"});
@@ -25,8 +43,6 @@ module.exports = {
     async edit(req, res) {
         const postId = req.params.id;
         const { title, short_desc, content, image } = req.body;
-
-
         try {
             const updatedPost = await prisma.post.update({
                 where: { id: parseInt(postId) },
@@ -37,8 +53,16 @@ module.exports = {
                     image
                 }
             });
+            const error = []
+            if ((title.length <= 0) || (short_desc.length <= 0) || (content.length <= 0) || (image.length <= 0)) {
+                error.push("Merci de remplir tous les champs !")
+            }
 
-            res.json({ message: "Post édité avec succès", post: updatedPost });
+            if(error.length === 0 ){
+                res.status(201).json({ message: "Post édité avec succès", post: updatedPost });
+            } else {
+                res.status(400).json({message: error})
+            }
         } catch (error) {
             console.log("Erreur lors de la modification du post", error);
             res.status(500).json({ error: "Une erreur s'est produite lors de la modification du post" });
@@ -61,21 +85,22 @@ module.exports = {
         let allPosts
         try{
             allPosts =  await prisma.post.findMany()
-            res.status(201).json({ message: "Voici la liste des posts : ", allPosts });
+            res.status(201).json(allPosts);
         } catch {
-            console.log("Erreur lors de la récupération des posts", error);
+            console.log("Erreur lors de la récupération des posts");
             res.status(500).json({ error: "Une erreur s'est produite lors de la récupération des posts" });
         }
     },
     async showOne(req, res){
-        const postId = req.params.id;
+        const postSlug = req.params.id;
+        let post
         try{
-            const post =  await prisma.post.findMany({
-                where: {id: parseInt(postId)}
+            post =  await prisma.post.findMany({
+                where: {slug: postSlug}
             })
             res.status(201).json({ post });
         } catch {
-            console.log("Erreur lors de la récupération du post", error);
+            console.log("Erreur lors de la récupération du post");
             res.status(500).json({ error: "Une erreur s'est produite lors de la récupération du post" });
         }
     }

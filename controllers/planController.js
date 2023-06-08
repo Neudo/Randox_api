@@ -6,17 +6,27 @@ module.exports = {
     async create(req,res){
         let newPlan
         try {
-            const { title, info, price, stripe_id } = req.body
+            const { title, info, price,image, stripe_id } = req.body
 
             newPlan = await prisma.plan.create({
                 data: {
                     title,
                     info,
                     price,
+                    image,
                     stripe_id
                 }
             })
-            res.status(201).json({ message: "Plan créé avec succès", plan: newPlan });
+
+            const error = []
+            if ((title.length <= 0) || (info.length <= 0) || (price.length <= 0) || (image.length <= 0)) {
+                error.push("Merci de remplir tous les champs")
+            }
+            if(error.length === 0 ){
+                res.status(201).json({ message: "Post créé avec succès", plan: newPlan });
+            } else {
+                res.status(400).json({message: error})
+            }
         } catch (error) {
             console.log("Erreur lors de la création du plan", error)
             res.status(500).json({ error: "Une erreur s'est produite lors de la création du plan"});
