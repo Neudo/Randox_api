@@ -11,36 +11,53 @@ module.exports = {
     async register(req, res, next) {
         let newUser;
         try {
-            const { email, name, password } = req.body;
+            const {email, name, password} = req.body;
+
+            const errors = []
+            if (!req.body.email) {
+                console.log('email vide')
+                errors.push("Merci d'entrer une adresse mail")
+            }
+            if (!req.body.name) {
+                console.log('email vide')
+                errors.push("Merci d'entrer un prénom")
+            }
+            if (!req.body.password) {
+                console.log('email vide')
+                errors.push("Merci d'entrer un mot dde passe")
+            }
 
             const existingUser = await prisma.user.findFirst({
                 where: {
                     OR: [
-                        { email },
-                        { name }
+                        {email},
+                        {name}
                     ]
                 }
             });
             if (existingUser) {
-                return res.status(400).json({ error: "Cet utilisateur existe déjà" });
+                return res.status(400).json({error: "Cet utilisateur existe déjà"});
             }
-            const hashedPassword = await bcrypt.hash(password, 10);
+            if (errors.length ) {
+                return res.status(400).json({error: errors})
+            } else {
+                const hashedPassword = await bcrypt.hash(password, 10);
+                newUser = await prisma.user.create({
 
-            newUser = await prisma.user.create({
-
-                data: {
-                    email,
-                    name,
-                    password : hashedPassword,
-                    stripe_customer_id : '',
-                    isAdmin : false
-                },
-            });
-            res.status(201).json({ message: "Utilisateur créé avec succès", user: newUser });
-            next()
+                    data: {
+                        email,
+                        name,
+                        password: hashedPassword,
+                        stripe_customer_id: '',
+                        isAdmin: false
+                    },
+                });
+                res.status(201).json({message: "Utilisateur créé avec succès", user: newUser});
+                next()
+            }
         } catch (error) {
             console.error("Erreur lors de la création de l'utilisateur:", error);
-            res.status(500).json({ error: "Une erreur s'est produite lors de la création de l'utilisateur" });
+            res.status(500).json({error: "Une erreur s'est produite lors de la création de l'utilisateur".errors});
         }
     },
     async sendMailRegister(req, res) {

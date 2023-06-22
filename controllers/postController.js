@@ -98,7 +98,7 @@ module.exports = {
             post =  await prisma.post.findMany({
                 where: {slug: postSlug}
             })
-            res.status(201).json({ post });
+            res.status(201).json( post );
         } catch {
             console.log("Erreur lors de la récupération du post");
             res.status(500).json({ error: "Une erreur s'est produite lors de la récupération du post" });
