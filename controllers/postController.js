@@ -86,9 +86,9 @@ module.exports = {
         try{
             allPosts =  await prisma.post.findMany()
             res.status(201).json(allPosts);
-        } catch {
-            console.log("Erreur lors de la récupération des posts");
-            res.status(500).json({ error: "Une erreur s'est produite lors de la récupération des posts" });
+        } catch (error) {
+            console.error("Erreur lors de la récupération des posts:", error);
+            res.status(500).json({ error: "Une erreur s'est produite lors de la récupération des posts", details: error.message });
         }
     },
     async showOne(req, res){
