@@ -15,15 +15,12 @@ module.exports = {
 
             const errors = []
             if (!req.body.email) {
-                console.log('email vide')
                 errors.push("Merci d'entrer une adresse mail")
             }
             if (!req.body.name) {
-                console.log('email vide')
                 errors.push("Merci d'entrer un prénom")
             }
             if (!req.body.password) {
-                console.log('email vide')
                 errors.push("Merci d'entrer un mot dde passe")
             }
 
@@ -84,17 +81,30 @@ module.exports = {
         try {
             const { email, password } = req.body;
 
-            const user = await prisma.user.findUnique({ where: { email } });
-            if (!user) {
-                return res.status(401).json({ error: "Identifiants invalides" });
-            }
 
-            const passwordMatch = await bcrypt.compare(password, user.password);
-            if (!passwordMatch) {
-                return res.status(401).json({ error: "Identifiants invalides" });
+            const errors = []
+
+            if (!req.body.email) {
+                errors.push("Merci d'entrer une adresse mail")
             }
-            const token = jwt.sign({ userId: user.id }, JWT_ACCESS_SECRET, { expiresIn: "24h" });
-            res.status(200).json({ message: "Connexion réussie", user, token });
+            if (!req.body.password) {
+                errors.push("Merci d'entrer un mot dde passe")
+            }
+            if (errors.length ) {
+                return res.status(400).json({error: errors})
+            } else {
+                const user = await prisma.user.findUnique({ where: { email } });
+                if (!user) {
+                    return res.status(401).json({ error: "Identifiants invalides" });
+                }
+
+                const passwordMatch = await bcrypt.compare(password, user.password);
+                if (!passwordMatch) {
+                    return res.status(401).json({ error: "Identifiants invalides" });
+                }
+                const token = jwt.sign({ userId: user.id }, JWT_ACCESS_SECRET, { expiresIn: "24h" });
+                res.status(200).json({ message: "Connexion réussie", user, token });
+            }
         } catch (error) {
             res.status(500).json({ error: "Une erreur s'est produite." });
         }

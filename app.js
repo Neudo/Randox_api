@@ -24,21 +24,21 @@ app.use('/post', postRouter)
 app.use('/plan', planRouter)
 app.use('/contact', contactRouter)
 
-// app.post('/checkout', async (req, res) => {
-//     const session = await stripe.checkout.sessions.create({
-//         line_items: [
-//             {
-//                 price: req.body.price,
-//                 quantity: 1,
-//             },
-//         ],
-//         mode: 'subscription',
-//         success_url: `${SITE_URL}/success.html`,
-//         cancel_url: `${SITE_URL}/cancel.html`,
-//     });
-//
-//     res.redirect(303, session.url);
-// });
+app.post('/checkout', async (req, res) => {
+    const session = await stripe.checkout.sessions.create({
+        line_items: [
+            {
+                price: req.body.price,
+                quantity: 1,
+            },
+        ],
+        mode: 'subscription',
+        success_url: `${SITE_URL}/success.html`,
+        cancel_url: `${SITE_URL}/cancel.html`,
+    });
+
+    res.redirect(303, session.url);
+});
 
 app.post('/checkout', async (req, res) => {
     const prices = await stripe.prices.list({
