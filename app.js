@@ -7,7 +7,6 @@ const bodyParser = require('body-parser')
 const { PrismaClient } = require('@prisma/client');
 const db = new PrismaClient();
 module.exports = { db };
-const cors = require('cors');
 
 
 // Configuration des en-têtes CORS
