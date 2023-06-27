@@ -41,6 +41,7 @@ app.post('/checkout', async (req, res) => {
 });
 
 app.post('/checkout', async (req, res) => {
+    console.log("on est dans le checkout API")
     const prices = await stripe.prices.list({
         lookup_keys: [req.body.lookup_key],
         expand: ['data.product'],
