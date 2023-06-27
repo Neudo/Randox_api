@@ -57,7 +57,7 @@ app.post('/checkout', async (req, res) => {
             },
         ],
         mode: 'subscription',
-        success_url: `${SITE_URL}/success.html`,
+        success_url: `${SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${SITE_URL}/cancel.html`,
     });
 
