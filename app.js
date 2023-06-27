@@ -13,11 +13,9 @@ module.exports = { db };
 
 
 const app = express()
-app.use(express.static('public'));
-app.use(cors())
 app.use(express.json())
 app.use(cors({
-    origin: {SITE_URL}, // Remplacez l'URL par celle de votre application Vue.js
+    origin: {SITE_URL},
     methods: 'GET, POST',
     allowedHeaders: 'Content-Type',
 }));
