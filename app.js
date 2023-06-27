@@ -33,8 +33,8 @@ app.post('/checkout', async (req, res) => {
             },
         ],
         mode: 'subscription',
-        success_url: `${SITE_URL}/success.html`,
-        cancel_url: `${SITE_URL}/cancel.html`,
+        success_url: `${SITE_URL}/panier/success.html`,
+        cancel_url: `${SITE_URL}/panier/cancel.html`,
     });
 
     res.redirect(303, session.url);
