@@ -7,11 +7,21 @@ const bodyParser = require('body-parser')
 const { PrismaClient } = require('@prisma/client');
 const db = new PrismaClient();
 module.exports = { db };
+const cors = require('cors');
+
+
+// Configuration des en-têtes CORS
+
 
 const app = express()
 app.use(express.static('public'));
 app.use(cors())
 app.use(express.json())
+app.use(cors({
+    origin: {SITE_URL}, // Remplacez l'URL par celle de votre application Vue.js
+    methods: 'GET, POST',
+    allowedHeaders: 'Content-Type',
+}));
 const PORT = process.env.PORT || 3000
 
 
