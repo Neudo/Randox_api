@@ -7,23 +7,23 @@ npm run dev
 Liste des routes : 
 
 
-Auth
-http://localhost:3005/auth/signup
-http://localhost:3005/auth/login
-http://localhost:3005/auth/logout
-http://localhost:3005/auth/me
+Auth <br>
+http://localhost:3005/auth/signup <br>
+http://localhost:3005/auth/login <br>
+http://localhost:3005/auth/logout <br>
+http://localhost:3005/auth/me <br>
 
-Posts
-http://localhost:3005/post/delete/16
-http://localhost:3005/post/create
-http://localhost:3005/post/edit/1
-http://localhost:3005/post/
+Posts <br>
+http://localhost:3005/post/delete/16 <br>
+http://localhost:3005/post/create <br>
+http://localhost:3005/post/edit/1 <br>
+http://localhost:3005/post/ <br>
 
-Plans
-http://localhost:3005/plan/create
-http://localhost:3005/plan/edit/1
-http://localhost:3005/plan/delete/1
-http://localhost:3005/plan/
+Plans <br>
+http://localhost:3005/plan/create <br>
+http://localhost:3005/plan/edit/1 <br>
+http://localhost:3005/plan/delete/1 <br>
+http://localhost:3005/plan/ <br>
 
-Stripe
-https://randox-api.onrender.com/checkout/
+Stripe <br>
+https://randox-api.onrender.com/checkout/ <br>
